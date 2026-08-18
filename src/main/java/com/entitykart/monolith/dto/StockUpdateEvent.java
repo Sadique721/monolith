@@ -1,0 +1,11 @@
+package com.entitykart.monolith.dto;
+
+import lombok.Data;
+
+@Data
+public class StockUpdateEvent {
+
+    private Long productId;
+    private Integer quantity;
+    private String eventType;
+}

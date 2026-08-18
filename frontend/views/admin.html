@@ -1,0 +1,1416 @@
+<div ng-init="initAdmin()">
+    <div class="admin-header-row">
+        <div>
+            <h2>Admin Control Center</h2>
+            <p class="text-secondary">Manage Entitykart e-commerce operations, order fulfillment, and returns</p>
+        </div>
+        <div>
+            <span class="status-badge approved" style="font-size: 0.85rem;"><i class="fa fa-shield-halved"></i> SECURE MODE</span>
+        </div>
+    </div>
+
+    <div class="admin-layout" style="margin-top: 2rem;">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <ul class="admin-menu-list">
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'dashboard'}" ng-click="switchTab('dashboard')">
+                    <i class="fa fa-chart-pie"></i> Dashboard
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'users'}" ng-click="switchTab('users')">
+                    <i class="fa fa-users"></i> User Accounts
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'products'}" ng-click="switchTab('products')">
+                    <i class="fa fa-cubes"></i> Products Catalog
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'categories'}" ng-click="switchTab('categories')">
+                    <i class="fa fa-tags"></i> Categories list
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'orders'}" ng-click="switchTab('orders')">
+                    <i class="fa fa-cart-flatbed"></i> Order Operations
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'returns'}" ng-click="switchTab('returns')">
+                    <i class="fa fa-rotate-left"></i> Return & Refunds
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'payments'}" ng-click="switchTab('payments')">
+                    <i class="fa fa-credit-card"></i> Payments History
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'reviews'}" ng-click="switchTab('reviews')">
+                    <i class="fa fa-ranking-stars"></i> Reviews Moderation
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'reports'}" ng-click="switchTab('reports')">
+                    <i class="fa fa-chart-line"></i> Reports & Stats
+                </li>
+                <li class="admin-menu-item" ng-class="{active: activeTab === 'devHistory'}" ng-click="switchTab('devHistory')">
+                    <i class="fa-solid fa-laptop-code"></i> Dev History & Plans
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Tab Content Panel -->
+        <div class="card-glass">
+            
+            <!-- Dashboard Panel -->
+            <div ng-if="activeTab === 'dashboard'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3>Dashboard Overview</h3>
+                    <span class="text-secondary font-mono" style="font-size: 0.85rem;"><i class="fa fa-clock"></i> Operations Console</span>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="grid-4" style="margin-bottom: 2rem;">
+                    <div class="card-glass stat-card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: rgba(59, 130, 246, 0.1); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 1.5rem;">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <div>
+                            <span class="text-secondary" style="font-size: 0.8rem; display: block;">Total Users</span>
+                            <h3 style="margin: 0; font-size: 1.6rem;">{{ dashboardStats.totalUsers }}</h3>
+                        </div>
+                    </div>
+                    <div class="card-glass stat-card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: rgba(16, 185, 129, 0.1); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 1.5rem;">
+                            <i class="fa fa-cubes"></i>
+                        </div>
+                        <div>
+                            <span class="text-secondary" style="font-size: 0.8rem; display: block;">Total Products</span>
+                            <h3 style="margin: 0; font-size: 1.6rem;">{{ dashboardStats.totalProducts }}</h3>
+                        </div>
+                    </div>
+                    <div class="card-glass stat-card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: rgba(245, 158, 11, 0.1); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.5rem;">
+                            <i class="fa fa-tags"></i>
+                        </div>
+                        <div>
+                            <span class="text-secondary" style="font-size: 0.8rem; display: block;">Categories</span>
+                            <h3 style="margin: 0; font-size: 1.6rem;">{{ dashboardStats.totalCategories }}</h3>
+                        </div>
+                    </div>
+                    <div class="card-glass stat-card" style="padding: 1.2rem; display: flex; align-items: center; gap: 1rem;">
+                        <div style="background: rgba(239, 68, 68, 0.1); width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ef4444; font-size: 1.5rem;">
+                            <i class="fa fa-cart-flatbed"></i>
+                        </div>
+                        <div>
+                            <span class="text-secondary" style="font-size: 0.8rem; display: block;">Total Orders</span>
+                            <h3 style="margin: 0; font-size: 1.6rem;">{{ dashboardStats.totalOrders }}</h3>
+                        </div>
+                    </div>
+                </div> <!-- Closing stats grid-4 container to fix tab rendering bug -->
+                
+                <!-- Microservices Telemetry & Performance Section -->
+                <div class="card-glass" style="margin-bottom: 2rem; padding: 1.5rem;">
+                    <h4 style="margin-bottom: 1.5rem;"><i class="fa fa-server text-accent"></i> Microservices Telemetry & Performance</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                        <!-- User Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-users text-accent"></i> User Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-user-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Product Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-cubes text-accent"></i> Product Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-product-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Cart Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-shopping-cart text-accent"></i> Cart Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-cart-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Order Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-receipt text-accent"></i> Order Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-order-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Payment Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-credit-card text-accent"></i> Payment Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-payment-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Wishlist Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-heart text-accent"></i> Wishlist Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-wishlist-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Review Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-star text-accent"></i> Review Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-review-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Return Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-rotate-left text-accent"></i> Return Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-return-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- Notification Service -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-bell text-accent"></i> Notification Service</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-notification-service"></canvas>
+                            </div>
+                        </div>
+                        <!-- API Gateway -->
+                        <div class="card-glass" style="padding: 1rem; text-align: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: var(--shadow-sm);">
+                            <h5 style="margin-bottom: 0.8rem; font-size: 0.9rem; color: #1e293b;"><i class="fa fa-network-wired text-accent"></i> API Gateway</h5>
+                            <div style="position: relative; height: 160px; width: 100%;">
+                                <canvas id="chart-api-gateway"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="align-items: start;">
+                    <!-- Recent Products -->
+                    <div class="card-glass" style="padding: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem;"><i class="fa fa-cubes text-accent"></i> Recent Products</h4>
+                        <div class="table-responsive">
+                            <table class="data-table" style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Brand</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="p in recentProducts">
+                                        <td><strong>{{ p.productName }}</strong></td>
+                                        <td>{{ p.brand }}</td>
+                                        <td>₹{{ p.price | number:2 }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="card-glass" style="padding: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem;"><i class="fa fa-cart-flatbed text-accent"></i> Recent Orders</h4>
+                        <div class="table-responsive">
+                            <table class="data-table" style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="o in recentOrders">
+                                        <td><strong>#{{ o.orderId }}</strong></td>
+                                        <td>₹{{ o.totalAmount | number:2 }}</td>
+                                        <td>
+                                            <span class="status-badge" ng-class="o.orderStatus.toLowerCase()">
+                                                {{ o.orderStatus }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Panel -->
+            <div ng-if="activeTab === 'users'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3>User Accounts Management</h3>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Avatar</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th>Contact</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="u in getPaginatedItems(adminUsers, 'users')">
+                                <td><strong>#{{ u.id }}</strong></td>
+                                <td>
+                                    <img ng-src="{{ u.profilePicURL || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80' }}" class="avatar-sm" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                </td>
+                                <td><strong>{{ u.name }}</strong></td>
+                                <td class="text-secondary">{{ u.email }}</td>
+                                <td class="text-secondary">{{ u.gender || 'Not specified' }}</td>
+                                <td class="text-secondary">{{ u.contactNum || 'N/A' }}</td>
+                                <td>
+                                    <span class="status-badge" ng-class="u.role === 'ADMIN' ? 'failed' : 'approved'">
+                                        {{ u.role }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge" ng-class="u.active ? 'approved' : 'pending'">
+                                        {{ u.active ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="editUser(u)" style="padding: 4px 8px;" title="Edit User"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="toggleUserStatus(u)" style="padding: 4px 8px;" title="Toggle Status"><i class="fa fa-power-off"></i></button>
+                                        <button class="btn btn-danger-gradient btn-sm" ng-click="deleteUser(u)" style="padding: 4px 8px;" title="Deactivate"><i class="fa fa-ban"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Items per page:</span>
+                        <select class="form-control" ng-model="pagination.users.size" ng-change="setPageSize('users', pagination.users.size)" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.85rem;">
+                            <option ng-value="5">5</option>
+                            <option ng-value="10">10</option>
+                            <option ng-value="50">50</option>
+                            <option ng-value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.users.page === 0" ng-click="pagination.users.page = pagination.users.page - 1">
+                            <i class="fa fa-chevron-left"></i> Prev
+                        </button>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Page {{ pagination.users.page + 1 }} of {{ (getTotalPages(adminUsers, 'users') || 1) }}</span>
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.users.page >= (getTotalPages(adminUsers, 'users') - 1)" ng-click="pagination.users.page = pagination.users.page + 1">
+                            Next <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products Catalog Panel -->
+            <div ng-if="activeTab === 'products'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3>Product Inventory</h3>
+                    <button class="btn btn-primary-gradient btn-sm" ng-click="openProductModal()">
+                        <i class="fa fa-plus"></i> Add Product
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="p in getPaginatedItems(adminProducts, 'products')">
+                                <td>
+                                    <img ng-src="{{ p.mainImageURL || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80' }}" class="product-thumb" alt="Product Image" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;">
+                                </td>
+                                <td class="font-mono text-secondary">{{ p.sku }}</td>
+                                <td><strong>{{ p.productName }}</strong></td>
+                                <td>{{ p.brand }}</td>
+                                <td>₹{{ p.price | number:2 }}</td>
+                                <td>
+                                    <span class="status-badge" ng-class="p.stockQuantity > 5 ? 'approved' : (p.stockQuantity > 0 ? 'pending' : 'failed')">
+                                        {{ p.stockQuantity }} left
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge" ng-class="p.status === 'Available' ? 'approved' : 'failed'">
+                                        {{ p.status || 'Available' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="editProduct(p)" style="padding: 4px 8px;" title="Edit Product"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-danger-gradient btn-sm" ng-click="deleteProduct(p)" style="padding: 4px 8px;" title="Delete Product"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Items per page:</span>
+                        <select class="form-control" ng-model="pagination.products.size" ng-change="setPageSize('products', pagination.products.size)" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.85rem;">
+                            <option ng-value="5">5</option>
+                            <option ng-value="10">10</option>
+                            <option ng-value="50">50</option>
+                            <option ng-value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.products.page === 0" ng-click="pagination.products.page = pagination.products.page - 1">
+                            <i class="fa fa-chevron-left"></i> Prev
+                        </button>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Page {{ pagination.products.page + 1 }} of {{ (getTotalPages(adminProducts, 'products') || 1) }}</span>
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.products.page >= (getTotalPages(adminProducts, 'products') - 1)" ng-click="pagination.products.page = pagination.products.page + 1">
+                            Next <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Panel -->
+            <div ng-if="activeTab === 'categories'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3>Product Categories</h3>
+                    <button class="btn btn-primary-gradient btn-sm" ng-click="openCategoryModal()">
+                        <i class="fa fa-plus"></i> Add Category
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat-start="c in getPaginatedItems(adminCategories, 'categories')">
+                                <td><strong>#{{ c.id }}</strong></td>
+                                <td class="text-accent font-semibold">{{ c.name }}</td>
+                                <td>
+                                    <button class="btn btn-secondary-glass btn-sm" ng-click="toggleSubCategories(c)">
+                                        <i class="fa fa-folder-tree"></i> {{ c.showSubs ? 'Hide' : 'View' }} Sub-categories
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr ng-repeat-end ng-if="c.showSubs">
+                                <td colspan="3" style="background: rgba(0,0,0,0.15); padding: 1.5rem; border-radius: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                        <h5 style="margin: 0; font-size: 0.95rem; color: var(--text-primary);"><i class="fa fa-folder-open"></i> Sub-categories in {{ c.name }}</h5>
+                                        <button class="btn btn-primary-gradient btn-sm" ng-click="openSubCategoryModal(c)" style="padding: 4px 8px; font-size: 0.8rem;">
+                                            <i class="fa fa-plus"></i> Add Sub-category
+                                        </button>
+                                    </div>
+                                    <div class="empty-state" ng-if="!c.subCategories || c.subCategories.length === 0" style="padding: 1rem 0; background: transparent; border: none;">
+                                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0;">No sub-categories defined for this category.</p>
+                                    </div>
+                                    <table class="data-table" ng-if="c.subCategories && c.subCategories.length > 0" style="font-size: 0.85rem; background: rgba(0,0,0,0.1); border: 1px solid var(--glass-border);">
+                                        <thead>
+                                            <tr>
+                                                <th>Sub-Category ID</th>
+                                                <th>Sub-Category Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="sub in c.subCategories">
+                                                <td><strong>#{{ sub.subCategoryId }}</strong></td>
+                                                <td class="text-accent font-semibold">{{ sub.name }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Items per page:</span>
+                        <select class="form-control" ng-model="pagination.categories.size" ng-change="setPageSize('categories', pagination.categories.size)" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.85rem;">
+                            <option ng-value="5">5</option>
+                            <option ng-value="10">10</option>
+                            <option ng-value="50">50</option>
+                            <option ng-value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.categories.page === 0" ng-click="pagination.categories.page = pagination.categories.page - 1">
+                            <i class="fa fa-chevron-left"></i> Prev
+                        </button>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Page {{ pagination.categories.page + 1 }} of {{ (getTotalPages(adminCategories, 'categories') || 1) }}</span>
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.categories.page >= (getTotalPages(adminCategories, 'categories') - 1)" ng-click="pagination.categories.page = pagination.categories.page + 1">
+                            Next <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Operations Panel -->
+            <div ng-if="activeTab === 'orders'">
+                <h3>Global Orders List</h3>
+                
+                <div class="empty-state" ng-if="adminOrders.length === 0" style="padding: 2rem 0;">
+                    <i class="fa fa-inbox"></i>
+                    <p>No customer orders registered in system.</p>
+                </div>
+
+                <div class="table-responsive" ng-if="adminOrders.length > 0">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Customer ID</th>
+                                <th>Order Date</th>
+                                <th>Total Amount</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="o in getPaginatedItems(adminOrders, 'orders')">
+                                <td><strong>#{{ o.orderId }}</strong></td>
+                                <td class="text-secondary">#{{ o.customerId }}</td>
+                                <td class="text-secondary">{{ o.orderDate | date:'mediumDate' }}</td>
+                                <td>₹{{ o.totalAmount | number:2 }}</td>
+                                <td>
+                                    <span class="status-badge" ng-class="o.paymentStatus === 'PAID' ? 'approved' : 'pending'">
+                                        {{ o.paymentStatus || 'PENDING' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge" ng-class="o.orderStatus.toLowerCase()">
+                                        {{ o.orderStatus }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="viewOrderDetails(o)">
+                                            <i class="fa fa-eye"></i> Details
+                                        </button>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-if="o.orderStatus === 'PLACED'" ng-click="updateStatus(o, 'SHIPPED')">
+                                            Ship
+                                        </button>
+                                        <button class="btn btn-success-gradient btn-sm" ng-if="o.orderStatus === 'SHIPPED'" ng-click="updateStatus(o, 'DELIVERED')">
+                                            Deliver
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Items per page:</span>
+                        <select class="form-control" ng-model="pagination.orders.size" ng-change="setPageSize('orders', pagination.orders.size)" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.85rem;">
+                            <option ng-value="5">5</option>
+                            <option ng-value="10">10</option>
+                            <option ng-value="50">50</option>
+                            <option ng-value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.orders.page === 0" ng-click="pagination.orders.page = pagination.orders.page - 1">
+                            <i class="fa fa-chevron-left"></i> Prev
+                        </button>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Page {{ pagination.orders.page + 1 }} of {{ (getTotalPages(adminOrders, 'orders') || 1) }}</span>
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.orders.page >= (getTotalPages(adminOrders, 'orders') - 1)" ng-click="pagination.orders.page = pagination.orders.page + 1">
+                            Next <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments History Panel -->
+            <div ng-if="activeTab === 'payments'">
+                <h3>Financial Payments History</h3>
+                
+                <div class="empty-state" ng-if="adminPayments.length === 0" style="padding: 2rem 0;">
+                    <i class="fa fa-credit-card"></i>
+                    <p>No payments recorded in the system.</p>
+                </div>
+
+                <div class="table-responsive" ng-if="adminPayments.length > 0">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Payment ID</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Mode</th>
+                                <th>Transaction Ref</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="py in getPaginatedItems(adminPayments, 'payments')">
+                                <td><strong>#{{ py.paymentId }}</strong></td>
+                                <td class="text-secondary">#{{ py.orderId }}</td>
+                                <td><strong>₹{{ py.amount | number:2 }}</strong></td>
+                                <td>
+                                    <span class="status-badge" ng-class="py.paymentMode === 'CARD' ? 'approved' : 'pending'">
+                                        {{ py.paymentMode }}
+                                    </span>
+                                </td>
+                                <td class="font-mono text-secondary">{{ py.transactionRef }}</td>
+                                <td>
+                                    <span class="status-badge" ng-class="py.paymentStatus === 'SUCCESS' ? 'approved' : 'failed'">
+                                        {{ py.paymentStatus }}
+                                    </span>
+                                </td>
+                                <td class="text-secondary">{{ py.paymentDate | date:'medium' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Items per page:</span>
+                        <select class="form-control" ng-model="pagination.payments.size" ng-change="setPageSize('payments', pagination.payments.size)" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.85rem;">
+                            <option ng-value="5">5</option>
+                            <option ng-value="10">10</option>
+                            <option ng-value="50">50</option>
+                            <option ng-value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.payments.page === 0" ng-click="pagination.payments.page = pagination.payments.page - 1">
+                            <i class="fa fa-chevron-left"></i> Prev
+                        </button>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Page {{ pagination.payments.page + 1 }} of {{ (getTotalPages(adminPayments, 'payments') || 1) }}</span>
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.payments.page >= (getTotalPages(adminPayments, 'payments') - 1)" ng-click="pagination.payments.page = pagination.payments.page + 1">
+                            Next <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews Moderation Panel -->
+            <div ng-if="activeTab === 'reviews'">
+                <h3>Product Reviews &amp; Ratings Moderation</h3>
+                
+                <div class="empty-state" ng-if="adminReviews.length === 0" style="padding: 2rem 0;">
+                    <i class="fa fa-star"></i>
+                    <p>No reviews registered in the system.</p>
+                </div>
+
+                <div class="table-responsive" ng-if="adminReviews.length > 0">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Review ID</th>
+                                <th>Product</th>
+                                <th>Customer ID</th>
+                                <th>Rating</th>
+                                <th>Comment</th>
+                                <th>Created At</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="rv in getPaginatedItems(adminReviews, 'reviews')">
+                                <td><strong>#{{ rv.reviewId }}</strong></td>
+                                <td style="display: flex; align-items: center; gap: 0.6rem;">
+                                    <div style="width: 32px; height: 32px; border-radius: 4px; overflow: hidden; border: 1px solid var(--glass-border); display: flex; justify-content: center; align-items: center; background: white; flex-shrink: 0;">
+                                        <img ng-src="{{ rv.productImage || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=100&auto=format&fit=crop&q=60' }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <span style="font-weight: 500;">{{ rv.productName || ('Product #' + rv.productId) }}</span>
+                                </td>
+                                <td class="text-secondary">#{{ rv.customerId }}</td>
+                                <td>
+                                    <span style="color: #f59e0b; display: flex; gap: 2px;">
+                                        <i class="fa-solid fa-star" ng-repeat="star in [1,2,3,4,5]" ng-style="{'opacity': star <= rv.rating ? '1' : '0.2'}"></i>
+                                    </span>
+                                </td>
+                                <td>{{ rv.comment }}</td>
+                                <td class="text-secondary">{{ rv.createdAt | date:'medium' }}</td>
+                                <td>
+                                    <button class="btn btn-danger-gradient btn-sm" ng-click="deleteReview(rv.reviewId)" style="padding: 4px 8px;">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Items per page:</span>
+                        <select class="form-control" ng-model="pagination.reviews.size" ng-change="setPageSize('reviews', pagination.reviews.size)" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.85rem;">
+                            <option ng-value="5">5</option>
+                            <option ng-value="10">10</option>
+                            <option ng-value="50">50</option>
+                            <option ng-value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.reviews.page === 0" ng-click="pagination.reviews.page = pagination.reviews.page - 1">
+                            <i class="fa fa-chevron-left"></i> Prev
+                        </button>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Page {{ pagination.reviews.page + 1 }} of {{ (getTotalPages(adminReviews, 'reviews') || 1) }}</span>
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.reviews.page >= (getTotalPages(adminReviews, 'reviews') - 1)" ng-click="pagination.reviews.page = pagination.reviews.page + 1">
+                            Next <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Returns & Refunds Panel -->
+            <div ng-if="activeTab === 'returns'">
+                <h3>Returns & Refunds Moderation</h3>
+                
+                <div class="empty-state" ng-if="adminReturns.length === 0" style="padding: 2rem 0;">
+                    <i class="fa fa-thumbs-up"></i>
+                    <p>No active return requests require moderation.</p>
+                </div>
+
+                <div style="margin-top: 1.5rem;" ng-if="adminReturns.length > 0">
+                    <div class="form-group" style="max-width: 400px; display: flex; gap: 1rem; align-items: center; margin-bottom: 2rem;">
+                        <label style="margin-bottom: 0; white-space: nowrap;">Admin Comments:</label>
+                        <input type="text" class="form-control" ng-model="$parent.adminComments" placeholder="Enter reason/notes for review decision...">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Return ID</th>
+                                    <th>Product Item</th>
+                                    <th>Customer ID</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="r in getPaginatedItems(adminReturns, 'returns')">
+                                    <td><strong>#{{ r.returnId }}</strong></td>
+                                    <td><span style="font-weight: 600;">{{ r.productName }}</span></td>
+                                    <td class="text-secondary">#{{ r.customerId }}</td>
+                                    <td class="text-secondary">{{ r.reason }}</td>
+                                    <td>
+                                        <span class="status-badge" ng-class="r.returnStatus.toLowerCase()">
+                                            {{ r.returnStatus }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div ng-if="r.returnStatus === 'REQUESTED'" style="display: flex; gap: 0.5rem;">
+                                            <button class="btn btn-success-gradient btn-sm" ng-click="approveReturn(r)">Approve</button>
+                                            <button class="btn btn-danger-gradient btn-sm" ng-click="rejectReturn(r)">Reject</button>
+                                        </div>
+                                        <div ng-if="r.returnStatus === 'APPROVED' && r.refundStatus === 'PENDING'">
+                                            <button class="btn btn-primary-gradient btn-sm" ng-click="refundReturn(r)">Process Refund</button>
+                                        </div>
+                                        <span class="text-muted" ng-if="r.returnStatus === 'REFUNDED'">Refunded</span>
+                                        <span class="text-muted" ng-if="r.returnStatus === 'REJECTED'">Rejected</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Pagination Controls -->
+                <div class="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; gap: 1rem;" ng-if="adminReturns.length > 0">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.9rem; color: var(--text-secondary);">Items per page:</span>
+                        <select class="form-control" ng-model="pagination.returns.size" ng-change="setPageSize('returns', pagination.returns.size)" style="width: auto; padding: 4px 8px; height: auto; font-size: 0.85rem;">
+                            <option ng-value="5">5</option>
+                            <option ng-value="10">10</option>
+                            <option ng-value="50">50</option>
+                            <option ng-value="100">100</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.returns.page === 0" ng-click="pagination.returns.page = pagination.returns.page - 1">
+                            <i class="fa fa-chevron-left"></i> Prev
+                        </button>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Page {{ pagination.returns.page + 1 }} of {{ (getTotalPages(adminReturns, 'returns') || 1) }}</span>
+                        <button class="btn btn-secondary-glass btn-sm" ng-disabled="pagination.returns.page >= (getTotalPages(adminReturns, 'returns') - 1)" ng-click="pagination.returns.page = pagination.returns.page + 1">
+                            Next <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports & Stats Panel -->
+            <div ng-if="activeTab === 'reports'">
+                <h3>Operations Dashboard & Exports</h3>
+                
+                <!-- Review Statistics Cards -->
+                <div class="grid-4" style="margin-top: 1.5rem; margin-bottom: 2.5rem;">
+                    <div class="card-glass" style="padding: 1.5rem; text-align: center;">
+                        <span class="text-secondary" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;"><i class="fa fa-star"></i> Avg Rating</span>
+                        <h2 style="font-size: 2.2rem; margin-bottom: 0; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                            {{ stats.avgRating | number:1 }} / 5.0
+                        </h2>
+                    </div>
+                    <div class="card-glass" style="padding: 1.5rem; text-align: center;">
+                        <span class="text-secondary" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;"><i class="fa fa-comments"></i> Total Reviews</span>
+                        <h2 style="font-size: 2.2rem; margin-bottom: 0; color: var(--text-primary);">
+                            {{ stats.totalReviews }}
+                        </h2>
+                    </div>
+                    <div class="card-glass" style="padding: 1.5rem; text-align: center;">
+                        <span class="text-secondary" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;"><i class="fa fa-shop"></i> Rated Products</span>
+                        <h2 style="font-size: 2.2rem; margin-bottom: 0; color: var(--text-primary);">
+                            {{ stats.productsWithReviews }}
+                        </h2>
+                    </div>
+                    <div class="card-glass" style="padding: 1.5rem; text-align: center;">
+                        <span class="text-secondary" style="font-size: 0.85rem; display: block; margin-bottom: 0.5rem;"><i class="fa fa-users"></i> Reviewers</span>
+                        <h2 style="font-size: 2.2rem; margin-bottom: 0; color: var(--text-primary);">
+                            {{ stats.activeReviewers }}
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="margin-bottom: 2.5rem;">
+                    <!-- Rating Distribution Chart (CSS Custom Bar Chart) -->
+                    <div class="card-glass" style="padding: 2rem;">
+                        <h4 style="margin-bottom: 1.5rem;"><i class="fa fa-ranking-stars" style="color: var(--color-accent);"></i> Rating Distribution</h4>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- 5 Star -->
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 50px; font-size: 0.9rem;" class="text-secondary">5 Star</span>
+                                <div style="flex: 1; height: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden;">
+                                    <div style="height: 100%; background: var(--gradient-accent); border-radius: 10px; transition: width 0.8s ease;" ng-style="{'width': getPercentage(distribution.fiveStar) + '%'}"></div>
+                                </div>
+                                <span style="width: 40px; text-align: right; font-size: 0.9rem;">{{ distribution.fiveStar }}</span>
+                            </div>
+                            <!-- 4 Star -->
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 50px; font-size: 0.9rem;" class="text-secondary">4 Star</span>
+                                <div style="flex: 1; height: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden;">
+                                    <div style="height: 100%; background: var(--gradient-accent); border-radius: 10px; transition: width 0.8s ease;" ng-style="{'width': getPercentage(distribution.fourStar) + '%'}"></div>
+                                </div>
+                                <span style="width: 40px; text-align: right; font-size: 0.9rem;">{{ distribution.fourStar }}</span>
+                            </div>
+                            <!-- 3 Star -->
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 50px; font-size: 0.9rem;" class="text-secondary">3 Star</span>
+                                <div style="flex: 1; height: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden;">
+                                    <div style="height: 100%; background: var(--gradient-accent); border-radius: 10px; transition: width 0.8s ease;" ng-style="{'width': getPercentage(distribution.threeStar) + '%'}"></div>
+                                </div>
+                                <span style="width: 40px; text-align: right; font-size: 0.9rem;">{{ distribution.threeStar }}</span>
+                            </div>
+                            <!-- 2 Star -->
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 50px; font-size: 0.9rem;" class="text-secondary">2 Star</span>
+                                <div style="flex: 1; height: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden;">
+                                    <div style="height: 100%; background: var(--gradient-accent); border-radius: 10px; transition: width 0.8s ease;" ng-style="{'width': getPercentage(distribution.twoStar) + '%'}"></div>
+                                </div>
+                                <span style="width: 40px; text-align: right; font-size: 0.9rem;">{{ distribution.twoStar }}</span>
+                            </div>
+                            <!-- 1 Star -->
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span style="width: 50px; font-size: 0.9rem;" class="text-secondary">1 Star</span>
+                                <div style="flex: 1; height: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden;">
+                                    <div style="height: 100%; background: var(--gradient-accent); border-radius: 10px; transition: width 0.8s ease;" ng-style="{'width': getPercentage(distribution.oneStar) + '%'}"></div>
+                                </div>
+                                <span style="width: 40px; text-align: right; font-size: 0.9rem;">{{ distribution.oneStar }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Report Card -->
+                    <div class="card-glass" style="padding: 2rem; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <h4 style="margin-bottom: 1rem;"><i class="fa fa-envelope" style="color: var(--color-accent);"></i> Dispatch Combined Reports</h4>
+                            <p class="text-secondary" style="font-size: 0.9rem; margin-bottom: 1.5rem;">Send combined Excel and Word files directly to any administrator or operations mailbox.</p>
+                        </div>
+                        <form ng-submit="emailReport()">
+                            <div class="form-group">
+                                <label>Report Context</label>
+                                <select class="form-control" ng-model="emailReportData.reportType" required>
+                                    <option value="orders">Orders Report</option>
+                                    <option value="products">Inventory Products Report</option>
+                                    <option value="users">Registered Users Report</option>
+                                    <option value="payments">Financial Payments Report</option>
+                                    <option value="returns">Operational Returns Report</option>
+                                    <option value="reviews">Product Review Ratings Report</option>
+                                    <option value="wishlist">Wishlist Metrics Report</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Recipient Email Address</label>
+                                <input type="email" class="form-control" ng-model="emailReportData.email" placeholder="entitykart@gmail.com" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary-gradient btn-block btn-sm" style="margin-top: 1rem;">
+                                <i class="fa fa-paper-plane"></i> Email Combined Report
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Export Downloads Section -->
+                <div>
+                    <h4 style="margin-bottom: 1.5rem;"><i class="fa fa-file-export" style="color: var(--color-accent);"></i> Download Entity Reports</h4>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Report Dataset</th>
+                                    <th>Format Excel (.xlsx)</th>
+                                    <th>Format Word (.doc)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Customer Orders Catalog</strong></td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('orders', 'excel')">
+                                            <i class="fa-regular fa-file-excel" style="color: #10b981;"></i> Download Excel
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('orders', 'word')">
+                                            <i class="fa-regular fa-file-word" style="color: #3b82f6;"></i> Download Word
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Product Inventory Catalog</strong></td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('products', 'excel')">
+                                            <i class="fa-regular fa-file-excel" style="color: #10b981;"></i> Download Excel
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('products', 'word')">
+                                            <i class="fa-regular fa-file-word" style="color: #3b82f6;"></i> Download Word
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Registered System Users</strong></td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('users', 'excel')">
+                                            <i class="fa-regular fa-file-excel" style="color: #10b981;"></i> Download Excel
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('users', 'word')">
+                                            <i class="fa-regular fa-file-word" style="color: #3b82f6;"></i> Download Word
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Financial Payments History</strong></td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('payments', 'excel')">
+                                            <i class="fa-regular fa-file-excel" style="color: #10b981;"></i> Download Excel
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('payments', 'word')">
+                                            <i class="fa-regular fa-file-word" style="color: #3b82f6;"></i> Download Word
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Customer Return Requests</strong></td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('returns', 'excel')">
+                                            <i class="fa-regular fa-file-excel" style="color: #10b981;"></i> Download Excel
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('returns', 'word')">
+                                            <i class="fa-regular fa-file-word" style="color: #3b82f6;"></i> Download Word
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Rating Reviews History</strong></td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('reviews', 'excel')">
+                                            <i class="fa-regular fa-file-excel" style="color: #10b981;"></i> Download Excel
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('reviews', 'word')">
+                                            <i class="fa-regular fa-file-word" style="color: #3b82f6;"></i> Download Word
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Customer Wishlist Metrics</strong></td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('wishlist', 'excel')">
+                                            <i class="fa-regular fa-file-excel" style="color: #10b981;"></i> Download Excel
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-secondary-glass btn-sm" ng-click="downloadReport('wishlist', 'word')">
+                                            <i class="fa-regular fa-file-word" style="color: #3b82f6;"></i> Download Word
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dev History & Plans Panel -->
+            <div ng-if="activeTab === 'devHistory'">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h3>System Integration &amp; Migration Ledger</h3>
+                        <p class="text-secondary" style="font-size: 0.9rem; margin-top: 0.2rem;">Trace project history, local database migrations, and monolithic features extraction.</p>
+                    </div>
+                    <button class="btn btn-secondary-glass btn-sm" ng-click="loadDevHistory()">
+                        <i class="fa fa-arrows-rotate"></i> Refresh History
+                    </button>
+                </div>
+
+                <div class="grid-2" style="margin-bottom: 2.5rem; align-items: start;">
+                    <!-- Visual Timeline -->
+                    <div class="card-glass" style="padding: 2rem;">
+                        <h4 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-clock-rotate-left" style="color: var(--color-accent);"></i> Project Evolution Timeline</h4>
+                        
+                        <div class="timeline-container" style="position: relative; padding-left: 2rem; border-left: 2px solid var(--glass-border); margin-left: 1rem; display: flex; flex-direction: column; gap: 2rem;">
+                            <div class="timeline-entry" ng-repeat="phase in devHistory.phases" style="position: relative;">
+                                <!-- Timeline icon badge -->
+                                <div style="position: absolute; left: calc(-2rem - 13px); top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--bg-primary); border: 2px solid var(--color-accent); display: flex; align-items: center; justify-content: center; z-index: 2;">
+                                    <i class="fa {{ phase.icon }}" style="font-size: 0.75rem; color: var(--color-accent-secondary);"></i>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                                    <h5 style="margin-bottom: 0; font-size: 1.05rem; font-weight: 600;">{{ phase.name }}</h5>
+                                    <span class="status-badge {{ phase.badgeClass }}" style="font-size: 0.65rem; padding: 0.15rem 0.5rem;">{{ phase.status }}</span>
+                                </div>
+                                <span class="text-muted" style="font-size: 0.8rem; display: block; margin-bottom: 0.8rem;"><i class="fa-regular fa-calendar"></i> {{ phase.date }}</span>
+                                <p class="text-secondary" style="font-size: 0.85rem; line-height: 1.5; margin-bottom: 0.8rem;">{{ phase.description }}</p>
+                                
+                                <ul style="padding-left: 1.2rem; margin: 0; font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.4rem;">
+                                    <li ng-repeat="ach in phase.achievements">
+                                        {{ ach }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Task Tracker & Future Roadmap -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <!-- Interactive Task Checklist -->
+                        <div class="card-glass" style="padding: 2rem;">
+                            <h4 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-list-check" style="color: var(--color-accent-secondary);"></i> Active Plan Task Tracker</h4>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+                                <div class="task-tracker-item" ng-repeat="task in checklistTasks" style="display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1rem; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); border-radius: 8px; transition: all 0.3s;" ng-style="task.completed ? {'opacity': '0.7', 'border-color': 'rgba(16,185,129,0.2)'} : {}">
+                                    <div style="display: flex; align-items: center; gap: 0.8rem; flex: 1;">
+                                        <input type="checkbox" ng-model="task.completed" ng-change="calculateProgress()" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--color-accent);">
+                                        <span ng-style="task.completed ? {'text-decoration': 'line-through'} : {}" style="font-size: 0.9rem; font-weight: 500;">{{ task.name }}</span>
+                                    </div>
+                                    <span class="status-badge" ng-class="task.completed ? 'approved' : 'pending'" style="font-size: 0.65rem; padding: 0.15rem 0.5rem;">
+                                        {{ task.completed ? 'Done' : 'Todo' }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.85rem;">
+                                    <span class="text-secondary">Overall Plan Progress</span>
+                                    <strong>{{ planProgress }}%</strong>
+                                </div>
+                                <div style="width: 100%; height: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden;">
+                                    <div style="height: 100%; background: var(--gradient-accent); border-radius: 10px; transition: width 0.5s ease;" ng-style="{'width': planProgress + '%'}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Roadmap & Upcoming Plans -->
+                        <div class="card-glass" style="padding: 2rem;">
+                            <h4 style="margin-bottom: 1.2rem;"><i class="fa-solid fa-map-location-dot" style="color: #f59e0b;"></i> Upcoming Roadmap</h4>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                                <div ng-repeat="plan in devHistory.upcomingPlans" style="display: flex; gap: 1rem; align-items: flex-start; padding: 0.8rem; border-radius: 8px; background: rgba(255,255,255,0.01);">
+                                    <span class="status-badge" ng-class="plan.priority === 'High' ? 'failed' : (plan.priority === 'Medium' ? 'pending' : 'approved')" style="font-size: 0.65rem; padding: 0.15rem 0.5rem; margin-top: 0.1rem;">
+                                        {{ plan.priority }}
+                                    </span>
+                                    <p class="text-secondary" style="font-size: 0.85rem; line-height: 1.4; margin-bottom: 0;">{{ plan.task }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal-backdrop" ng-show="showAddProductModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Add New Product</h3>
+                <button class="remove-btn" ng-click="closeProductModal()">&times;</button>
+            </div>
+            <form ng-submit="addProductSubmit()">
+                <div class="modal-body" style="max-height: 450px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" class="form-control" ng-model="newProduct.productName" required>
+                    </div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <input type="text" class="form-control" ng-model="newProduct.brand" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" ng-model="newProduct.categoryId" ng-options="cat.id as cat.name for cat in adminCategories" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sub-Category</label>
+                            <select class="form-control" ng-model="newProduct.subCategoryId" ng-options="sub.subCategoryId as sub.name for sub in availableSubCategories">
+                                <option value="">-- None --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Selling Price (₹)</label>
+                            <input type="number" step="0.01" class="form-control" ng-model="newProduct.price" required>
+                        </div>
+                        <div class="form-group">
+                            <label>MRP (₹)</label>
+                            <input type="number" step="0.01" class="form-control" ng-model="newProduct.mrp" required>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Stock Quantity</label>
+                            <input type="number" class="form-control" ng-model="newProduct.stockQuantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label>SKU (Optional)</label>
+                            <input type="text" class="form-control" ng-model="newProduct.sku" placeholder="Auto-generated if blank">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" ng-model="newProduct.description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Image URL (Optional)</label>
+                        <input type="url" class="form-control" ng-model="newProduct.mainImageURL" placeholder="http://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Or Upload Product Image to Cloudinary</label>
+                        <input type="file" class="form-control" onchange="angular.element(this).scope().uploadProductImageFile(this)" accept="image/*">
+                    </div>
+                    <div class="form-group" ng-if="newProduct.mainImageURL">
+                        <label>Image Preview</label>
+                        <div style="margin-top: 0.5rem; text-align: center;">
+                            <img ng-src="{{newProduct.mainImageURL}}" alt="Product Image" style="max-height: 120px; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary-glass" ng-click="closeProductModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary-gradient">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal-backdrop" ng-show="showAddCategoryModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Create Category</h3>
+                <button class="remove-btn" ng-click="closeCategoryModal()">&times;</button>
+            </div>
+            <form ng-submit="addCategorySubmit()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" class="form-control" ng-model="newCategory.name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary-glass" ng-click="closeCategoryModal()" ng-disabled="isSubmittingCategory">Cancel</button>
+                    <button type="submit" class="btn btn-primary-gradient" ng-disabled="isSubmittingCategory">{{ isSubmittingCategory ? 'Creating...' : 'Create Category' }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Sub-category Modal -->
+    <div class="modal-backdrop" ng-show="showAddSubCategoryModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Create Sub-category in {{ activeCategoryForSub.name }}</h3>
+                <button class="remove-btn" ng-click="closeSubCategoryModal()">&times;</button>
+            </div>
+            <form ng-submit="addSubCategorySubmit()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Sub-category Name</label>
+                        <input type="text" class="form-control" ng-model="newSubCategory.name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary-glass" ng-click="closeSubCategoryModal()" ng-disabled="isSubmittingSubCategory">Cancel</button>
+                    <button type="submit" class="btn btn-primary-gradient" ng-disabled="isSubmittingSubCategory">{{ isSubmittingSubCategory ? 'Creating...' : 'Create Sub-category' }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal-backdrop" ng-show="showEditProductModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Edit Product</h3>
+                <button class="remove-btn" ng-click="closeEditProductModal()">&times;</button>
+            </div>
+            <form ng-submit="updateProductSubmit()">
+                <div class="modal-body" style="max-height: 450px; overflow-y: auto;">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" class="form-control" ng-model="editingProduct.productName" required>
+                    </div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <input type="text" class="form-control" ng-model="editingProduct.brand" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" ng-model="editingProduct.categoryId" ng-options="cat.id as cat.name for cat in adminCategories" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sub-Category</label>
+                            <select class="form-control" ng-model="editingProduct.subCategoryId" ng-options="sub.subCategoryId as sub.name for sub in editAvailableSubCategories">
+                                <option value="">-- None --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Selling Price (₹)</label>
+                            <input type="number" step="0.01" class="form-control" ng-model="editingProduct.price" required>
+                        </div>
+                        <div class="form-group">
+                            <label>MRP (₹)</label>
+                            <input type="number" step="0.01" class="form-control" ng-model="editingProduct.mrp" required>
+                        </div>
+                    </div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Stock Quantity</label>
+                            <input type="number" class="form-control" ng-model="editingProduct.stockQuantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label>SKU</label>
+                            <input type="text" class="form-control" ng-model="editingProduct.sku" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" ng-model="editingProduct.status">
+                                <option value="Available">Available</option>
+                                <option value="Unavailable">Unavailable</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" ng-model="editingProduct.description" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Product Image URL (Optional)</label>
+                        <input type="url" class="form-control" ng-model="editingProduct.mainImageURL" placeholder="http://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Or Upload Product Image to Cloudinary</label>
+                        <input type="file" class="form-control" onchange="angular.element(this).scope().uploadEditProductImageFile(this)" accept="image/*">
+                    </div>
+                    <div class="form-group" ng-if="editingProduct.mainImageURL">
+                        <label>Image Preview</label>
+                        <div style="margin-top: 0.5rem; text-align: center;">
+                            <img ng-src="{{editingProduct.mainImageURL}}" alt="Product Image" style="max-height: 120px; border-radius: 8px; border: 1px solid var(--glass-border);">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary-glass" ng-click="closeEditProductModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary-gradient">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal-backdrop" ng-show="showEditUserModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Edit User Profile</h3>
+                <button class="remove-btn" ng-click="closeEditUserModal()">&times;</button>
+            </div>
+            <form ng-submit="updateUserSubmit()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-control" ng-model="editingUser.name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" class="form-control" ng-model="editingUser.email" required>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select class="form-control" ng-model="editingUser.gender">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input type="text" class="form-control" ng-model="editingUser.contactNum">
+                        </div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select class="form-control" ng-model="editingUser.role" required>
+                                <option value="USER">USER</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Account Status</label>
+                            <select class="form-control" ng-model="editingUser.active" ng-options="o.v as o.n for o in [{v:true, n:'Active'}, {v:false, n:'Inactive'}]" required></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Picture URL</label>
+                        <input type="url" class="form-control" ng-model="editingUser.profilePicURL" placeholder="http://example.com/pic.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password (Optional)</label>
+                        <input type="password" class="form-control" ng-model="editingUser.password" placeholder="Leave blank to keep current password">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary-glass" ng-click="closeEditUserModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary-gradient">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal-backdrop" ng-show="showOrderDetailModal">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Order #{{ viewingOrder.orderId }} Details</h3>
+                <button class="remove-btn" ng-click="closeOrderDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 450px; overflow-y: auto;">
+                <div class="grid-2" style="margin-bottom: 1rem;">
+                    <div>
+                        <span class="text-secondary" style="font-size: 0.8rem; display: block;">Customer ID</span>
+                        <strong>#{{ viewingOrder.customerId }}</strong>
+                    </div>
+                    <div>
+                        <span class="text-secondary" style="font-size: 0.8rem; display: block;">Order Date</span>
+                        <strong>{{ viewingOrder.orderDate | date:'medium' }}</strong>
+                    </div>
+                </div>
+                <div class="grid-2" style="margin-bottom: 1.5rem;">
+                    <div>
+                        <span class="text-secondary" style="font-size: 0.8rem; display: block;">Payment Status</span>
+                        <span class="status-badge" ng-class="viewingOrder.paymentStatus === 'PAID' ? 'approved' : 'pending'">{{ viewingOrder.paymentStatus || 'PENDING' }}</span>
+                    </div>
+                    <div>
+                        <span class="text-secondary" style="font-size: 0.8rem; display: block;">Order Status</span>
+                        <span class="status-badge" ng-class="viewingOrder.orderStatus.toLowerCase()">{{ viewingOrder.orderStatus }}</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; flex-wrap: wrap;" ng-if="viewingOrder.shippingAddress">
+                    <div style="flex: 1; min-width: 200px;">
+                        <h4 style="margin-bottom: 0.8rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.4rem;">Shipping Address</h4>
+                        <p class="text-secondary" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0;">
+                            <strong style="color: var(--text-primary);">{{ viewingOrder.shippingAddress.fullName || 'Customer' }}</strong><br>
+                            {{ viewingOrder.shippingAddress.streetAddress }}<br>
+                            {{ viewingOrder.shippingAddress.city }}, {{ viewingOrder.shippingAddress.state }} - {{ viewingOrder.shippingAddress.zipCode }}<br>
+                            <strong>Phone:</strong> {{ viewingOrder.shippingAddress.phone || 'N/A' }}
+                        </p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;" ng-if="viewingOrder.paymentDetails">
+                        <h4 style="margin-bottom: 0.8rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.4rem;">Payment Details</h4>
+                        <p class="text-secondary" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0;">
+                            <strong>Method:</strong> {{ (viewingOrder.paymentDetails.paymentMode || 'COD') | uppercase }}<br>
+                            <strong>Ref/Txn ID:</strong> {{ viewingOrder.paymentDetails.transactionRef || 'N/A' }}<br>
+                            <strong>Date:</strong> {{ viewingOrder.paymentDetails.paymentDate | date:'medium' || 'N/A' }}
+                        </p>
+                    </div>
+                </div>
+
+                <h4 style="margin-bottom: 0.8rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.4rem;">Order Items</h4>
+                <div class="table-responsive" style="margin-bottom: 1.5rem;">
+                    <table class="data-table" style="font-size: 0.85rem; background: rgba(0,0,0,0.1);">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in viewingOrder.orderItems">
+                                <td style="display: flex; align-items: center; gap: 0.6rem;">
+                                    <div style="width: 36px; height: 36px; border-radius: 4px; overflow: hidden; border: 1px solid var(--glass-border); display: flex; justify-content: center; align-items: center; background: white; flex-shrink: 0;">
+                                        <img ng-src="{{ item.productImage || 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=100&auto=format&fit=crop&q=60' }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <span style="font-weight: 500;">{{ item.productName || ('Product #' + item.productId) }}</span>
+                                </td>
+                                <td>{{ item.quantity }}</td>
+                                <td>₹{{ item.unitPrice | number:2 }}</td>
+                                <td>₹{{ (item.unitPrice * item.quantity) | number:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: right; font-size: 1.1rem;">
+                    <span class="text-secondary">Grand Total: </span>
+                    <strong class="text-accent" style="font-size: 1.3rem;">₹{{ viewingOrder.totalAmount | number:2 }}</strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary-glass" ng-click="closeOrderDetailModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

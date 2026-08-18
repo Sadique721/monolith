@@ -1,0 +1,158 @@
+<div class="page-container" ng-init="initCart()">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h2><i class="fa fa-shopping-bag"></i> Shopping Bag</h2>
+            <p class="text-secondary" ng-if="cartItems.length > 0">{{ cartItems.length }} item(s) ready for checkout</p>
+        </div>
+        <button class="btn btn-secondary-glass btn-sm" ng-click="clearCart()" ng-if="cartItems.length > 0">
+            <i class="fa fa-trash"></i> Clear Bag
+        </button>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" ng-if="cartItems.length === 0 && !cartLoading">
+        <div class="empty-state-icon">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </div>
+        <h3>Your bag is empty</h3>
+        <p>Looks like you haven't added any products yet. Explore our premium catalog!</p>
+        <a href="#!/products" class="btn btn-primary-gradient">
+            <i class="fa fa-store"></i> Start Shopping
+        </a>
+    </div>
+
+    <!-- Loading State -->
+    <div class="empty-state" ng-if="cartLoading">
+        <div class="spinner" style="margin: 0 auto;"></div>
+        <p style="margin-top: 1rem;" class="text-secondary">Loading your cart...</p>
+    </div>
+
+    <!-- Cart Content -->
+    <div class="cart-layout" ng-if="cartItems.length > 0">
+
+        <!-- Left Column: Items List -->
+        <div class="cart-items-column">
+            <div class="cart-items-list">
+                <div class="cart-item card-glass" ng-repeat="item in cartItems" ng-class="{'removing': item.removing}">
+
+                    <!-- Product Image / Icon -->
+                    <div class="cart-item-img">
+                        <img ng-src="{{ item.mainImageURL }}" alt="{{ item.productName }}"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="cart-item-img-placeholder" style="display:none;">
+                            <i class="fa fa-box-open"></i>
+                        </div>
+                    </div>
+
+                    <!-- Product Info -->
+                    <div class="cart-item-details">
+                        <a href="#!/product/{{ item.productId }}" class="cart-item-title">{{ item.productName }}</a>
+                        <span class="cart-item-price">₹{{ item.price | number:2 }} each</span>
+                        <span class="cart-item-subtotal">Subtotal: <strong>₹{{ (item.price * item.quantity) | number:2 }}</strong></span>
+                    </div>
+
+                    <!-- Quantity & Remove Controls -->
+                    <div class="cart-item-actions">
+                        <div class="qty-selector">
+                            <button class="qty-btn" ng-click="adjustQuantity(item, -1)"
+                                    ng-disabled="item.quantity <= 1">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                            <span class="qty-display">{{ item.quantity }}</span>
+                            <button class="qty-btn" ng-click="adjustQuantity(item, 1)">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 6px; margin-top: 6px;">
+                            <button class="btn btn-secondary-glass btn-sm" ng-click="saveForLater(item)" title="Save for later" style="font-size: 0.75rem; padding: 4px 8px;">
+                                <i class="fa fa-bookmark"></i> Save
+                            </button>
+                            <button class="remove-btn" ng-click="removeItem(item)" title="Remove from bag">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coupon Code Section -->
+            <div class="card-glass coupon-section" style="margin-top: 1.5rem;">
+                <h4 style="font-size: 1rem; margin-bottom: 1rem;"><i class="fa fa-ticket text-accent"></i> Have a Coupon?</h4>
+                <div ng-if="!couponApplied">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" class="form-control" ng-model="couponCode"
+                               placeholder="Enter coupon code (e.g. WELCOME10)"
+                               style="flex: 1; text-transform: uppercase; letter-spacing: 1px;"
+                               ng-keyup="$event.keyCode === 13 && applyCoupon()">
+                        <button class="btn btn-primary-gradient btn-sm" ng-click="applyCoupon()" style="white-space: nowrap;">
+                            <i class="fa fa-check"></i> Apply
+                        </button>
+                    </div>
+                    <div style="margin-top: 0.8rem; display: flex; flex-wrap: wrap; gap: 6px;">
+                        <span class="coupon-chip" ng-repeat="c in availableCoupons" ng-click="couponCode = c.code; applyCoupon()" title="{{ c.description }}">
+                            {{ c.code }}
+                        </span>
+                    </div>
+                </div>
+                <div ng-if="couponApplied" class="coupon-applied-row">
+                    <div>
+                        <span class="coupon-tag"><i class="fa fa-tag"></i> {{ couponApplied.code }}</span>
+                        <span class="text-accent" style="font-weight: 600; margin-left: 8px;">−₹{{ couponDiscount | number:2 }} saved!</span>
+                    </div>
+                    <button class="btn btn-secondary-glass btn-sm" ng-click="removeCoupon()" style="font-size: 0.75rem;">
+                        <i class="fa fa-xmark"></i> Remove
+                    </button>
+                </div>
+            </div>
+
+            <!-- Continue Shopping -->
+            <div style="margin-top: 1.5rem;">
+                <a href="#!/products" class="text-secondary" style="font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa fa-arrow-left"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Column: Order Summary -->
+        <div class="cart-summary-column">
+            <div class="card-glass cart-summary">
+                <h3><i class="fa fa-receipt"></i> Order Summary</h3>
+
+                <div class="summary-row">
+                    <span class="text-secondary">Subtotal ({{ cartItems.length }} items)</span>
+                    <span>₹{{ cartTotal | number:2 }}</span>
+                </div>
+                <div class="summary-row" ng-if="couponApplied">
+                    <span class="text-accent"><i class="fa fa-tag"></i> Coupon ({{ couponApplied.code }})</span>
+                    <span class="text-accent font-semibold">−₹{{ couponDiscount | number:2 }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="text-secondary">Shipping</span>
+                    <span class="text-accent font-semibold">FREE</span>
+                </div>
+                <div class="summary-row">
+                    <span class="text-secondary">Tax (GST 18%)</span>
+                    <span>₹{{ (cartTotal * 0.18) | number:2 }}</span>
+                </div>
+                <hr class="summary-divider">
+                <div class="summary-row total">
+                    <span>Total Payable</span>
+                    <span class="price-now">₹{{ getFinalTotal() | number:2 }}</span>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="trust-badges">
+                    <span><i class="fa fa-shield-check text-accent"></i> Secure Checkout</span>
+                    <span><i class="fa fa-truck text-accent"></i> Free Delivery</span>
+                    <span><i class="fa fa-rotate-left text-accent"></i> Easy Returns</span>
+                </div>
+
+                <a href="#!/checkout" class="btn btn-primary-gradient btn-block" style="margin-top: 1.5rem;">
+                    <i class="fa fa-credit-card"></i> Proceed to Checkout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

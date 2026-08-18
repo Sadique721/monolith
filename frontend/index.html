@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="entitykartApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>EntityKart - Premium E-Commerce Platform | Shop Electronics, Fashion & More</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="EntityKart is a modern e-commerce platform offering premium electronics, fashion, home decor and more. Fast delivery, easy returns, and secure payments.">
+    <meta name="keywords" content="e-commerce, online shopping, electronics, fashion, home decor, EntityKart">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="EntityKart - Premium E-Commerce Platform">
+    <meta property="og:description" content="Shop premium products across electronics, fashion, home and more. Free delivery, easy returns, secure payments.">
+    <meta property="og:site_name" content="EntityKart">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EntityKart - Premium E-Commerce Platform">
+    <meta name="twitter:description" content="Shop premium products with free delivery and easy returns.">
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for Admin Analytics Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body ng-controller="mainController" ng-class="{'mobile-menu-active': mobileMenuOpen}">
+
+    <!-- Top Mini Header Bar -->
+    <div class="top-header">
+        <div>
+            <span><i class="fa-solid fa-mobile-screen-button"></i> Download App</span>
+            <span style="margin-left: 15px;"><i class="fa-solid fa-percent"></i> Offers &amp; Deals</span>
+        </div>
+        <div class="top-header-links">
+            <a href="#!/login" ng-if="!isLoggedIn()"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login</a>
+            <a href="#!/register" ng-if="!isLoggedIn()"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+            <span ng-if="isLoggedIn()"><i class="fa-solid fa-user-check"></i> Hello, {{ getUserName() }}</span>
+            <a href="javascript:void(0)" aria-label="24/7 Customer Support"><i class="fa-solid fa-headset"></i> 24/7 Support</a>
+        </div>
+    </div>
+
+    <!-- Header & Navigation Bar -->
+    <header class="navbar-container orange-theme-navbar">
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="#/!">
+                    EntityKart<span class="logo-plus-badge">Plus</span>
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button class="hamburger-btn" id="hamburger-btn" ng-click="toggleMobileMenu()" aria-label="Toggle menu">
+                <span class="hamburger-line" ng-class="{'open': mobileMenuOpen}"></span>
+                <span class="hamburger-line" ng-class="{'open': mobileMenuOpen}"></span>
+                <span class="hamburger-line" ng-class="{'open': mobileMenuOpen}"></span>
+            </button>
+            
+            <div class="nav-search">
+                <form ng-submit="searchProducts()">
+                    <div class="search-input-wrapper">
+                        <select class="search-category-select" ng-model="searchCategory" ng-change="filterCategoryFromSearch()">
+                            <option value="">All Categories</option>
+                            <option ng-repeat="cat in navbarCategories" value="{{cat.id}}">{{cat.name}}</option>
+                        </select>
+                        <input type="text" ng-model="searchQuery" placeholder="Search for products, brands and more..." id="main-search-input">
+                        <button type="submit" class="search-submit-btn orange-theme-search-btn"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Desktop nav links -->
+            <div class="nav-links" ng-class="{'mobile-nav-open': mobileMenuOpen}">
+                <!-- Mobile close overlay -->
+                <div class="mobile-nav-overlay" ng-click="closeMobileMenu()"></div>
+                <div class="mobile-nav-panel">
+                    <a href="#!/products" class="nav-item" ng-class="{active: isActive('/products')}" ng-click="closeMobileMenu()">
+                        <i class="fa-solid fa-store"></i> <span>Shop</span>
+                    </a>
+                    <a href="#!/wishlist" class="nav-item" ng-class="{active: isActive('/wishlist')}" ng-if="isLoggedIn()" ng-click="closeMobileMenu()">
+                        <i class="fa-regular fa-heart"></i> <span>Wishlist</span>
+                    </a>
+                    <a href="#!/cart" class="nav-item cart-btn-badge" ng-class="{active: isActive('/cart')}" ng-click="closeMobileMenu()">
+                        <i class="fa-solid fa-shopping-bag"></i>
+                        <span>Cart</span>
+                        <span class="badge" ng-if="getCartCount() > 0">{{ getCartCount() }}</span>
+                    </a>
+                    <a href="#!/orders" class="nav-item" ng-class="{active: isActive('/orders')}" ng-if="isLoggedIn()" ng-click="closeMobileMenu()">
+                        <i class="fa-solid fa-box-open"></i> <span>Orders</span>
+                    </a>
+                    <a href="#!/admin" class="nav-item admin-badge" ng-class="{active: isActive('/admin')}" ng-if="isAdmin()" ng-click="closeMobileMenu()">
+                        <i class="fa-solid fa-user-shield"></i> <span>Admin</span>
+                    </a>
+                    
+
+                    <!-- Authentication Status -->
+                    <div class="auth-section">
+                        <div ng-if="!isLoggedIn()" class="auth-buttons">
+                            <a href="#!/login" class="btn btn-secondary-glass" style="color: white; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.15);" ng-click="closeMobileMenu()">Login</a>
+                            <a href="#!/register" class="btn btn-secondary-glass" style="color: var(--color-accent); background: white; border-color: white;" ng-click="closeMobileMenu()">Sign Up</a>
+                        </div>
+                        <div ng-if="isLoggedIn()" class="user-dropdown-wrapper">
+                            <div class="user-profile-trigger" ng-click="toggleUserMenu()">
+                                <div class="avatar orange-theme-avatar" ng-if="!getUserProfilePic()">{{ getUserInitials() }}</div>
+                                <img class="avatar-img" ng-src="{{ getUserProfilePic() }}" ng-if="getUserProfilePic()" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                                <span class="user-name">{{ getUserName() }}</span>
+                                <i class="fa fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            <div class="user-dropdown-menu" ng-show="userMenuOpen">
+                                <a href="#!/profile" ng-click="closeUserMenu(); closeMobileMenu()"><i class="fa-solid fa-user-gear"></i> Edit Profile</a>
+                                <a href="#!/profile?tab=addresses" ng-click="closeUserMenu(); closeMobileMenu()"><i class="fa-solid fa-location-dot"></i> My Addresses</a>
+                                <a href="#!/orders" ng-click="closeUserMenu(); closeMobileMenu()"><i class="fa-solid fa-receipt"></i> My Orders</a>
+                                <a href="#!/wishlist" ng-click="closeUserMenu(); closeMobileMenu()"><i class="fa-solid fa-heart"></i> My Wishlist</a>
+                                <a href="#!/returns" ng-click="closeUserMenu(); closeMobileMenu()"><i class="fa-solid fa-rotate-left"></i> My Returns</a>
+                                <hr class="dropdown-divider">
+                                <a href="javascript:void(0)" ng-click="logout(); closeMobileMenu()"><i class="fa-solid fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /.mobile-nav-panel -->
+            </div><!-- /.nav-links -->
+        </nav>
+    </header>
+
+    <!-- Horizontal Categories Navigation Sub-Header Bar -->
+    <div class="sub-navbar-container">
+        <div class="sub-navbar">
+            <div class="sub-navbar-items-wrapper">
+                <a ng-repeat="cat in navbarCategories" href="#!/products?categoryId={{cat.id}}" class="sub-navbar-item" ng-class="{active: isActiveCategory(cat.id)}">{{cat.name}}</a>
+            </div>
+            <a href="#!/products" class="sub-navbar-item sub-navbar-more">&gt; More</a>
+        </div>
+    </div>
+
+    <!-- Global Loading Overlay -->
+    <div class="loading-overlay" ng-show="isLoading()">
+        <div class="spinner-wrapper">
+            <div class="spinner"></div>
+            <p class="loading-text">Loading Entitykart...</p>
+        </div>
+    </div>
+
+    <!-- Main View Container (Dynamically injected routes) -->
+    <main class="main-content">
+        <div ng-view class="view-slide-animation"></div>
+    </main>
+
+    <!-- Global Toast Notifications -->
+    <div class="toast-container">
+        <div class="toast-card" ng-repeat="toast in toasts" ng-class="toast.type">
+            <div class="toast-icon">
+                <i class="fa" ng-class="{'fa-check-circle': toast.type === 'success', 'fa-exclamation-circle': toast.type === 'error', 'fa-info-circle': toast.type === 'info'}"></i>
+            </div>
+            <div class="toast-message">
+                <h4>{{ toast.title }}</h4>
+                <p>{{ toast.message }}</p>
+            </div>
+            <button class="toast-close" ng-click="removeToast($index)">&times;</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-info">
+                <h3>Entity<span class="text-accent">kart</span></h3>
+                <p>Experience the future of e-commerce. Seamless microservices, robust payment workflows, and real-time event-driven notifications.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Shop</h4>
+                <ul>
+                    <li><a href="#!/products">All Products</a></li>
+                    <li><a href="#!/products?categoryId=1">Electronics</a></li>
+                    <li><a href="#!/products?categoryId=2">Fashion</a></li>
+                    <li><a href="#!/products?categoryId=3">Home &amp; Kitchen</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Customer Help</h4>
+                <ul>
+                    <li><a href="#!/orders">Track Orders</a></li>
+                    <li><a href="#!/returns">Return &amp; Refund Policy</a></li>
+                    <li><a href="#!/cart">Shipping Information</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contact</h4>
+                <ul>
+                    <li><i class="fa fa-envelope"></i> entitykart@gmail.com</li>
+                    <li><i class="fa fa-phone"></i> +91 92747 02850</li>
+                    <li><i class="fa fa-location-dot"></i> Tech Park, Building 4, Bengaluru</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Entitykart. All rights reserved. Powered by Spring Boot Monolith.</p>
+        </div>
+    </footer>
+
+    <!-- AngularJS Framework and Dependencies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.min.js"></script>
+
+    <!-- Core AngularJS App Configuration -->
+    <script src="js/app.js?v=1.0.2"></script>
+
+    <!-- AngularJS Services -->
+    <script src="js/services/apiService.js?v=1.0.2"></script>
+    <script src="js/services/authService.js?v=1.0.2"></script>
+    <script src="js/services/productService.js?v=1.0.2"></script>
+    <script src="js/services/userService.js?v=1.0.2"></script>
+    <script src="js/services/cartService.js?v=1.0.2"></script>
+    <script src="js/services/orderService.js?v=1.0.2"></script>
+    <script src="js/services/wishlistService.js?v=1.0.2"></script>
+    <script src="js/services/reviewService.js?v=1.0.2"></script>
+
+    <!-- AngularJS Controllers -->
+    <script src="js/controllers/mainController.js?v=1.0.2"></script>
+    <script src="js/controllers/authController.js?v=1.0.2"></script>
+    <script src="js/controllers/productController.js?v=1.0.2"></script>
+    <script src="js/controllers/cartController.js?v=1.0.2"></script>
+    <script src="js/controllers/orderController.js?v=1.0.2"></script>
+    <script src="js/controllers/wishlistController.js?v=1.0.2"></script>
+    <script src="js/controllers/returnController.js?v=1.0.2"></script>
+    <script src="js/controllers/adminController.js?v=1.0.2"></script>
+    <script src="js/controllers/profileController.js?v=1.0.2"></script>
+
+    <!-- Cookie Consent Popup -->
+    <div class="cookie-consent-banner" ng-if="showCookieConsent">
+        <div class="cookie-content">
+            <div class="cookie-icon">
+                <i class="fa-solid fa-cookie-bite"></i>
+            </div>
+            <div class="cookie-text">
+                <h4>Cookie Preferences</h4>
+                <p>We use cookies to improve your shopping experience, remember preferences, and analyze our traffic. Manage your preferences below.</p>
+            </div>
+        </div>
+        <div class="cookie-actions">
+            <button class="btn btn-sm btn-secondary-glass" ng-click="rejectCookies()">Decline Non-Essential</button>
+            <button class="btn btn-sm btn-primary-gradient" ng-click="acceptCookies()">Accept All</button>
+        </div>
+    </div>
+
+</body>
+</html>

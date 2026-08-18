@@ -1,0 +1,19 @@
+﻿{
+  "port": 3000,
+  "server": {
+    "baseDir": "./",
+    "routes": {
+      "/api": "http://localhost:8080/api"
+    }
+  },
+  "ghostMode": false,
+  "open": true,
+  "notify": false,
+  "logLevel": "silent",
+  "middleware": [
+    {
+      "route": "/api",
+      "handle": "http://localhost:8080"
+    }
+  ]
+}
