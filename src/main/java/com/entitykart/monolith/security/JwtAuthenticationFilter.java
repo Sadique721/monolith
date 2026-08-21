@@ -148,6 +148,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        // ── Non-API requests: static assets + SPA frontend → bypass JWT ─────────
+        // JWT authentication is ONLY required for /api/** and /graphql endpoints.
+        // Everything else (CSS, JS, HTML partials, images, SPA routes) must be
+        // publicly accessible so the browser can load the AngularJS application.
+        // Without this, requests to /css/style.css and /js/app.js return 401 JSON
+        // instead of the actual files, causing a blank frontend page.
+        if (!path.startsWith("/api/") && !path.startsWith("/graphql")) {
+            filterChain.doFilter(wrappedRequest, response);
+            return;
+        }
+
         boolean isPublic = PUBLIC_ENDPOINTS.stream().anyMatch(path::startsWith);
         if (path.startsWith("/api/reviews")    && method.equalsIgnoreCase("GET")) isPublic = true;
         if (path.startsWith("/api/products")   && method.equalsIgnoreCase("GET")) isPublic = true;
