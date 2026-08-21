@@ -10,16 +10,18 @@ FROM eclipse-temurin:17-jdk-alpine AS build
 
 WORKDIR /app
 
-# Copy Gradle wrapper first (cache layer — only re-downloads if wrapper changes)
-COPY gradlew .
-COPY gradle gradle
-RUN chmod +x gradlew
+# Install Gradle 9.3.0 directly — avoids relying on gradle-wrapper.jar in repo
+RUN apk add --no-cache wget unzip && \
+    wget -q https://services.gradle.org/distributions/gradle-9.3.0-bin.zip -O /tmp/gradle.zip && \
+    unzip -q /tmp/gradle.zip -d /opt && \
+    rm /tmp/gradle.zip
+ENV PATH="${PATH}:/opt/gradle-9.3.0/bin"
 
 # Copy build scripts (cache layer — only re-resolves deps if these change)
 COPY build.gradle.kts settings.gradle.kts ./
 
 # Pre-download dependencies (allows Docker layer caching on subsequent builds)
-RUN ./gradlew dependencies --no-daemon || true
+RUN gradle dependencies --no-daemon || true
 
 # Copy source code
 COPY src src
@@ -31,7 +33,7 @@ COPY src src
 COPY frontend src/main/resources/static/
 
 # Build the fat JAR
-RUN ./gradlew bootJar --no-daemon
+RUN gradle bootJar --no-daemon
 
 # ── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM eclipse-temurin:17-jre-alpine
