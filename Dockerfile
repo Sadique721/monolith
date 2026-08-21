@@ -52,8 +52,13 @@ USER spring:spring
 # Render injects PORT env var — app reads ${PORT:8080} from application.yml
 EXPOSE 8080
 
+# JVM Arguments optimized for Render Free Tier (512MB RAM, 0.1 CPU)
+# -XX:TieredStopAtLevel=1 : Disables C2 compiler to drastically speed up startup and save CPU/Memory
+# -Xss256k                : Reduces thread stack size to save off-heap memory
 ENTRYPOINT ["java", \
   "-XX:+UseContainerSupport", \
   "-XX:MaxRAMPercentage=75.0", \
+  "-XX:TieredStopAtLevel=1", \
+  "-Xss256k", \
   "-Djava.security.egd=file:/dev/./urandom", \
   "-jar", "app.jar"]

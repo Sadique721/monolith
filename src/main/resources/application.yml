@@ -2,6 +2,8 @@ server:
   port: ${PORT:8080} # Render injects PORT env var; falls back to 8080 for local dev
 
 spring:
+  main:
+    lazy-initialization: true
   application:
     name: entitykart-monolith
   datasource:
