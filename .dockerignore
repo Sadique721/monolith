@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# .dockerignore — EntityKart Monolith
+# Excludes files from Docker build context to speed up builds and
+# avoid accidentally copying secrets or build artifacts into the image.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Git metadata (never needed in image)
+.git
+.gitignore
+.gitattributes
+
+# Gradle caches and local build outputs (build stage re-builds from source)
+.gradle/
+build/
+out/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.classpath
+*.project
+
+# Frontend dependencies (re-installed or excluded from static copy)
+frontend/node_modules/
+frontend/.cache/
+frontend/package-lock.json
+
+# Environment / secret files (never copy into image — use Render env vars)
+.env
+.env.local
+.env.production
+.env.example
+
+# Documentation (not needed at runtime)
+README.md
+*.md
+CHANGELOG*
+LICENSE*
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files (not needed in production image)
+src/test/
+
+# Temp / scratch files
+*.tmp
+*.bak

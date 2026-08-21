@@ -1,4 +1,4 @@
-﻿<p align="center">
+<p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:22d3ee,100:8b5cf6&height=220&section=header&text=EntityKart%20Monolith&fontSize=58&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Full-Stack%20Spring%20Boot%203%20%2B%20AngularJS%20E-Commerce%20Platform&descAlignY=60&descAlign=50" width="100%">
 </p>
 

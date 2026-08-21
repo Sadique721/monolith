@@ -35,6 +35,8 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.2.3")
     implementation("net.authorize:anet-java-sdk:2.0.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")  // /actuator/health for Render health check
+
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

@@ -1,14 +1,14 @@
 server:
-  port: 8080
+  port: ${PORT:8080}   # Render injects PORT env var; falls back to 8080 for local dev
 
 spring:
   application:
     name: entitykart-monolith
   datasource:
     # ─── LOCAL MySQL (active) ────────────────────────────────────────────────
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:entitykart_database}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:entitykart_database}?useSSL=${DB_USE_SSL:false}&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:0721}
+    password: ${DB_PASSWORD}   # No default — missing env var fails loudly at startup (safer than silent wrong password)
     # ─── Aiven Cloud MySQL (enable after whitelisting IP in Aiven console) ───
     # Copy credentials from Aiven Console → Connection Info
     # Set env vars: DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD
@@ -80,3 +80,13 @@ app:
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000}
 
+# ─── Spring Boot Actuator ────────────────────────────────────────────────────
+# Exposes /actuator/health for Render's health-check (healthCheckPath in render.yaml)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
