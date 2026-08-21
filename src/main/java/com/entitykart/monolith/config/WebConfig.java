@@ -44,21 +44,18 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     // ── SPA Forward Controller ────────────────────────────────────────────────
-    // AngularJS uses hashbang routing (#!/login), so server-side /login route
-    // should never be hit in normal usage. But if a user bookmarks or types
-    // a deep URL directly, forward it to index.html so AngularJS can handle it.
+    // Catch-all for SPA deep links (e.g. /login without the #!)
+    // If a route isn't found (404), forward it to index.html so AngularJS handles it.
     @Controller
-    static class SpaForwardController {
+    static class SpaForwardController implements org.springframework.boot.web.servlet.error.ErrorController {
 
-        private static final List<String> API_PREFIXES = List.of("/api/", "/actuator", "/graphql");
-
-        @GetMapping(value = {"/{path:[^\\.]*}", "/**/{path:[^\\.]*}"})
-        public String forward(jakarta.servlet.http.HttpServletRequest request) {
-            String uri = request.getRequestURI();
-            boolean isApiPath = API_PREFIXES.stream().anyMatch(uri::startsWith);
-            if (isApiPath) {
-                return null; // Let Spring handle API paths normally
+        @org.springframework.web.bind.annotation.RequestMapping("/error")
+        public String handleError(jakarta.servlet.http.HttpServletRequest request) {
+            Object status = request.getAttribute(jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE);
+            if (status != null && Integer.valueOf(status.toString()) == 404) {
+                return "forward:/index.html";
             }
+            // For other errors, let Spring's default error view handle it, or also forward
             return "forward:/index.html";
         }
     }
