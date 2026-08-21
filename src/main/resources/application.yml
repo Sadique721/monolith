@@ -29,9 +29,11 @@ spring:
         format_sql: true
   flyway:
     enabled: true
-    baseline-on-migrate: true
+    baseline-on-migrate: false
     validate-on-migrate: false
     locations: classpath:db/migration
+    out-of-order: false
+
   graphql:
     schema:
       locations: classpath:graphql/
