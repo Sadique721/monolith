@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8080}   # Render injects PORT env var; falls back to 8080 for local dev
+  port: ${PORT:8080} # Render injects PORT env var; falls back to 8080 for local dev
 
 spring:
   application:
@@ -8,7 +8,7 @@ spring:
     # ─── LOCAL MySQL (active) ────────────────────────────────────────────────
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:entitykart_database}?useSSL=${DB_USE_SSL:false}&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD}   # No default — missing env var fails loudly at startup (safer than silent wrong password)
+    password: ${DB_PASSWORD} # No default — missing env var fails loudly at startup (safer than silent wrong password)
     # ─── Aiven Cloud MySQL (enable after whitelisting IP in Aiven console) ───
     # Copy credentials from Aiven Console → Connection Info
     # Set env vars: DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD
@@ -31,6 +31,7 @@ spring:
     enabled: true
     baseline-on-migrate: false
     validate-on-migrate: false
+    clean-disabled: false       # Required for auto-repair strategy in FlywayRepairConfig.java
     locations: classpath:db/migration
     out-of-order: false
 
